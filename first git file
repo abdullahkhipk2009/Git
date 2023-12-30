@@ -1,0 +1,51 @@
+import csv
+
+def add_test():
+    subject = input("Enter the subject: ")
+    marks = input("Enter the marks obtained: ")
+    date = input("Enter the date of the test: ")
+
+    with open('report.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([subject, marks, date])
+
+def print_report():
+    try:
+        with open('report.csv', 'r') as file:
+            reader = csv.reader(file)
+            data = list(reader)
+            
+            if not data:
+                print("\nNo data available. Please add tests first.")
+                return
+
+            print("\nReport Card:")
+            max_len_subject = max(len("Subject"), max(len(row[0]) for row in data))
+            max_len_marks = max(len("Marks Obtained"), max(len(row[1]) for row in data))
+            max_len_date = max(len("Date of Test"), max(len(row[2]) for row in data))
+
+            print(f"{ 'Subject':<{max_len_subject}} | { 'Marks Obtained':<{max_len_marks}} | { 'Date of Test':<{max_len_date}}")
+            print("-" * (max_len_subject + max_len_marks + max_len_date + 5))
+
+            for row in data:
+                print(f"{row[0]:<{max_len_subject}} | {row[1]:<{max_len_marks}} | {row[2]:<{max_len_date}}")
+    except FileNotFoundError:
+        print("\nNo data available. Please add tests first.")
+
+while True:
+    print("\n- Entry Menu -")
+    print("1) Add Test")
+    print("2) Print Report")
+    print("3) Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == '1':
+        add_test()
+    elif choice == '2':
+        print_report()
+    elif choice == '3':
+        print("Exiting the program. Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please enter 1, 2, or 3.")
